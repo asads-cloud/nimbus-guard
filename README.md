@@ -10,7 +10,7 @@ Production-grade, multi-region AWS security scanner that detects high-risk misco
 **Regions:** eu-west-1 (Ireland, primary), eu-west-2 (London, secondary).  
 **Outputs:** Markdown + HTML reports; CI can fail on HIGH/CRITICAL.
 
-## Repo Layout (phase 1)
+## Repo Layout
 - `scanner/` — Python package `nimbus_guard`
 - `terraform/` — IaC (OIDC role, permissions)
 - `docker/` — Docker build context
