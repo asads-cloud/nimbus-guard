@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  oidc-smoke-test:
+    name: OIDC smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.NIMBUS_GUARD_ROLE_ARN }}
+          role-session-name: nimbus-guard-ci
+          aws-region: eu-west-1
+
+      - name: Who am I?
+        run: aws sts get-caller-identity
