@@ -72,4 +72,28 @@ jobs:
             nimbus-guard:latest
 
       - name: List generated reports
+        if: always()
         run: ls -l out || true
+
+      - name: Upload reports (artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nimbus-guard-reports-${{ env.SHORT_SHA || github.run_id }}
+          path: |
+            out/nimbus-guard-report.html
+            out/nimbus-guard-report.md
+            out/nimbus-guard-findings.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      # add a quick summary to the run page
+      - name: Attach summary
+        if: always()
+        run: |
+          echo "## Nimbus Guard" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Regions: eu-west-2, eu-west-1" >> $GITHUB_STEP_SUMMARY
+          echo "- Fail threshold: HIGH" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Artifacts: nimbus-guard-reports-${{ env.SHORT_SHA || github.run_id }}" >> $GITHUB_STEP_SUMMARY
