@@ -1,5 +1,7 @@
 # Nimbus Guard
 
+[![CI](https://github.com/asads-cloud/nimbus-guard/actions/workflows/ci.yml/badge.svg)](https://github.com/asads-cloud/nimbus-guard/actions/workflows/ci.yml)
+
 Production-grade, multi-region AWS security scanner that detects high-risk misconfigurations:
 - Public S3 buckets
 - Over-permissive IAM
