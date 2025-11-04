@@ -4,6 +4,23 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      aws_region:
+        description: "Primary AWS region for STS/action defaults"
+        required: false
+        type: string
+        default: "eu-west-2"
+      ng_regions:
+        description: "Comma-separated regions scanned by Nimbus Guard"
+        required: false
+        type: string
+        default: "eu-west-2,eu-west-1"
+      ng_fail_on:
+        description: "Fail threshold (INFO|LOW|MEDIUM|HIGH|CRITICAL)"
+        required: false
+        type: string
+        default: "HIGH"
 
 permissions:
   id-token: write
@@ -22,7 +39,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.NIMBUS_GUARD_ROLE_ARN }}
           role-session-name: nimbus-guard-ci
-          aws-region: eu-west-1
+          aws-region: ${{ inputs.aws_region || 'eu-west-2' }}
 
       - name: Who am I?
         run: aws sts get-caller-identity
@@ -33,11 +50,6 @@ jobs:
       - name: Derive short SHA
         id: vars
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
-
-      - name: Show derived tags
-        run: |
-          echo "latest"
-          echo "$SHORT_SHA"
 
       - name: Build Docker image
         run: |
@@ -51,9 +63,8 @@ jobs:
         run: mkdir -p out && chmod 777 out
 
       - name: Run Nimbus Guard (Docker)
-        # This step will exit non-zero if HIGH/CRITICAL findings exist (by design).
+        # Will exit non-zero if findings >= NG_FAIL_ON (by design)
         env:
-          # These are already set by aws-actions/configure-aws-credentials
           AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN: ${{ env.AWS_SESSION_TOKEN }}
@@ -63,10 +74,10 @@ jobs:
             -e AWS_ACCESS_KEY_ID \
             -e AWS_SECRET_ACCESS_KEY \
             -e AWS_SESSION_TOKEN \
-            -e AWS_REGION="eu-west-2" \
-            -e AWS_DEFAULT_REGION="eu-west-2" \
-            -e NG_REGIONS="eu-west-2,eu-west-1" \
-            -e NG_FAIL_ON="HIGH" \
+            -e AWS_REGION="${{ inputs.aws_region || 'eu-west-2' }}" \
+            -e AWS_DEFAULT_REGION="${{ inputs.aws_region || 'eu-west-2' }}" \
+            -e NG_REGIONS="${{ inputs.ng_regions || 'eu-west-2,eu-west-1' }}" \
+            -e NG_FAIL_ON="${{ inputs.ng_fail_on || 'HIGH' }}" \
             -e NG_OUT="/app/out" \
             -v "${{ github.workspace }}/out:/app/out" \
             nimbus-guard:latest
@@ -86,14 +97,3 @@ jobs:
             out/nimbus-guard-findings.json
           if-no-files-found: warn
           retention-days: 14
-
-      # add a quick summary to the run page
-      - name: Attach summary
-        if: always()
-        run: |
-          echo "## Nimbus Guard" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- Regions: eu-west-2, eu-west-1" >> $GITHUB_STEP_SUMMARY
-          echo "- Fail threshold: HIGH" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Artifacts: nimbus-guard-reports-${{ env.SHORT_SHA || github.run_id }}" >> $GITHUB_STEP_SUMMARY

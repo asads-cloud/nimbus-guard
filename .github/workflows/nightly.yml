@@ -1,0 +1,20 @@
+name: Nightly Nimbus Guard
+
+on:
+  schedule:
+    - cron: "0 1 * * *"   # 01:00 UTC nightly
+  workflow_dispatch:
+
+# Inherit the called workflow's permissions, or set explicitly if wanted
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  nightly:
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit
+    with:
+      aws_region: "eu-west-2"
+      ng_regions: "eu-west-2,eu-west-1"
+      ng_fail_on: "HIGH"
