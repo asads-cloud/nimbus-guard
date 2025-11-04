@@ -1,28 +1,51 @@
-# VCS
+# VCS and editor junk
 .git
 .gitignore
+.vscode
+.idea
+*.code-workspace
 
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.egg-info/
+# Python caches
+.pytype/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.venv/
+.venv/
+.env
+.env.*
+.git
+.gitignore
+Dockerfile
+README*.md
+**/out/
 dist/
 build/
-.venv/
 
-# Terraform
+# Terraform build noise
 .terraform/
 *.tfstate
 *.tfstate.*
+crash.log
 
-# IDE / OS
-.vscode/
+# Local outputs and artifacts
+out/
+dist/
+build/
+.eggs/
+*.egg-info/
+
+# CI/CD and docs extras that aren’t needed at runtime
+.github/
+docs/
+
+# OS junk
 .DS_Store
 Thumbs.db
 
-# Local artifacts
-out/
-docs/
-tests/
+# Docker nested context noise if any
+docker/*.log
