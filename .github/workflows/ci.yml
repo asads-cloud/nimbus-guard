@@ -28,7 +28,7 @@ permissions:
 
 jobs:
   oidc-smoke-test:
-    name: OIDC smoke test
+    name: Scan Results
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -97,3 +97,13 @@ jobs:
             out/nimbus-guard-findings.json
           if-no-files-found: warn
           retention-days: 14
+
+      - name: Attach summary
+        if: always()
+        run: |
+          echo "## Nimbus Guard" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Regions: eu-west-2, eu-west-1" >> $GITHUB_STEP_SUMMARY
+          echo "- Fail threshold: HIGH" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Artifacts: nimbus-guard-reports-${{ env.SHORT_SHA || github.run_id }}" >> $GITHUB_STEP_SUMMARY
