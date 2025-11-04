@@ -26,3 +26,23 @@ jobs:
 
       - name: Who am I?
         run: aws sts get-caller-identity
+
+      - name: Enable BuildKit
+        run: echo "DOCKER_BUILDKIT=1" >> $GITHUB_ENV
+
+      - name: Derive short SHA
+        id: vars
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Show derived tags
+        run: |
+          echo "latest"
+          echo "$SHORT_SHA"
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -f docker/Dockerfile \
+            -t nimbus-guard:latest \
+            -t nimbus-guard:$SHORT_SHA \
+            .
