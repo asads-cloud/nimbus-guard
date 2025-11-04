@@ -46,3 +46,30 @@ jobs:
             -t nimbus-guard:latest \
             -t nimbus-guard:$SHORT_SHA \
             .
+
+      - name: Prepare out dir on runner
+        run: mkdir -p out && chmod 777 out
+
+      - name: Run Nimbus Guard (Docker)
+        # This step will exit non-zero if HIGH/CRITICAL findings exist (by design).
+        env:
+          # These are already set by aws-actions/configure-aws-credentials
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ env.AWS_SESSION_TOKEN }}
+        run: |
+          docker run --rm \
+            -u 1001:1001 \
+            -e AWS_ACCESS_KEY_ID \
+            -e AWS_SECRET_ACCESS_KEY \
+            -e AWS_SESSION_TOKEN \
+            -e AWS_REGION="eu-west-2" \
+            -e AWS_DEFAULT_REGION="eu-west-2" \
+            -e NG_REGIONS="eu-west-2,eu-west-1" \
+            -e NG_FAIL_ON="HIGH" \
+            -e NG_OUT="/app/out" \
+            -v "${{ github.workspace }}/out:/app/out" \
+            nimbus-guard:latest
+
+      - name: List generated reports
+        run: ls -l out || true
