@@ -1,6 +1,8 @@
-# 🚀 Nimbus Guard — Delivery Playbook
+# 🚀 Nimbus Guard: Delivery Playbook
 
-This document summarises **deliverables by phase (0–5)** and provides a quick **demo guide** for showcasing Nimbus Guard; a multi‑region AWS security scanner for automated misconfiguration detection and CI/CD enforcement.
+This document outlines the **delivery phases**, **technical components**, and **demo workflows** for **Nimbus Guard**, a multi-region AWS security scanner for automated misconfiguration detection and CI/CD enforcement.
+
+It serves as a concise guide for understanding how the project was structured, delivered, and showcased.
 
 ---
 
@@ -8,82 +10,82 @@ This document summarises **deliverables by phase (0–5)** and provides a quick 
 
 | Attribute | Description |
 |------------|--------------|
-| **Purpose** | Multi‑region AWS security scanner that flags high‑risk misconfigurations and **fails CI** on `HIGH` / `CRITICAL` findings |
-| **Primary Regions** | `eu‑west‑2` (London), `eu‑west‑1` (Ireland) |
-| **Tech Stack** | Python 3.12 (boto3, jinja2, markdown, pyyaml), Docker, Terraform (~> 5.x), GitHub Actions (OIDC) |
-| **Artifacts per Run** | `nimbus‑guard‑report.md`, `nimbus‑guard‑report.html`, `nimbus‑guard‑report.json`  |
+| **Purpose** | Multi-region AWS security scanner that detects high-risk misconfigurations and can **fail CI** on `HIGH` / `CRITICAL` findings |
+| **Primary Regions** | `eu-west-2` (London), `eu-west-1` (Ireland) |
+| **Tech Stack** | Python 3.12 (boto3, Jinja2, Markdown, PyYAML), Docker, Terraform (~> 5.x), GitHub Actions (OIDC) |
+| **Artifacts per Run** | `nimbus-guard-report.md`, `nimbus-guard-report.html`, `nimbus-guard-report.json` |
 
 ---
 
-## ⚙️ 2. Phase Handoffs
+## ⚙️ 2. Delivery Phases
 
-### Phase 0 - Inception & Scope
-- Defined business objectives and success criteria.  
-- Established deliverables: **portfolio‑grade security scanner** and **recruiter‑ready technical asset**.  
-- Chose technology stack and region strategy.  
-- CLI outputs: Markdown + HTML + JSON.  
-- Introduced **exit codes by severity** for CI gating.
-
----
-
-### Phase 1 - Repository Bootstrap
-- Created Python package structure under `scanner/`.  
-- Implemented CLI entry (`runner.py`), checks registry, and `report.py`.  
-- Added dependency file `requirements.txt` with:  
-  - boto3, jinja2, markdown, pyyaml  
-- Standardised local development: **Windows + PowerShell + VS Code**.
+### Phase 0: Inception & Scope
+- Defined project objectives and success criteria  
+- Established deliverables: **portfolio-grade security automation project**  
+- Selected core technologies and AWS region strategy  
+- Planned multi-format outputs (Markdown + HTML + JSON)  
+- Added **exit codes by severity** to support CI gating  
 
 ---
 
-### Phase 2 - Core Checks
-Implemented core misconfiguration detectors for:
-- **S3:** Public buckets, ACLs, and block‑public‑access misconfigs  
-- **IAM:** Over‑permissive roles and inline policies  
+### Phase 1: Repository Bootstrap
+- Created modular Python package under `scanner/`  
+- Implemented CLI entry point (`runner.py`), checks registry, and reporting module  
+- Added dependency file `requirements.txt` (boto3, Jinja2, Markdown, PyYAML)  
+- Standardised local development environment (Windows + PowerShell + VS Code)  
+
+---
+
+### Phase 2: Core Security Checks
+Implemented foundational AWS misconfiguration checks:
+
+- **S3:** Public buckets, ACLs, and missing block-public-access settings  
+- **IAM:** Over-permissive roles and inline policies  
 - **EC2 Security Groups:** Rules open to `0.0.0.0/0`  
 - **CloudTrail:** Missing or unencrypted trails  
-- **Account:** Root MFA, password policy gaps  
+- **Account:** Root MFA and password policy enforcement  
 - **VPC:** Flow Logs validation  
 
-> Regions configurable; defaults: `eu‑west‑2`, `eu‑west‑1`
+> Default scan regions: `eu-west-2`, `eu-west-1` (configurable via CLI or env)
 
 ---
 
-### Phase 3 - Reporting & Exit Codes
-- Added **Markdown + HTML + JSON reporting** using Jinja and Markdown templates.  
-- Implemented **Fail‑on‑Severity Gate**: non‑zero exit code when `HIGH` or `CRITICAL` findings occur.  
-- Reports stored under `./out` as:  
-  - `nimbus‑guard‑report.md`  
-  - `nimbus‑guard‑report.html`
-  - `nimbus‑guard‑report.json` 
+### Phase 3: Reporting & Exit Codes
+- Added **Markdown, HTML, and JSON reporting** using Jinja2 templates  
+- Introduced **Fail-on-Severity Gate**: exits non-zero on `HIGH` or `CRITICAL` issues  
+- Reports stored under `./out`:
+  - `nimbus-guard-report.md`  
+  - `nimbus-guard-report.html`  
+  - `nimbus-guard-report.json`  
 
 ---
 
-### Phase 4 - Dockerization
-- Docker image: **`nimbus‑guard:latest`** (Python 3.12‑slim).  
-- `.dockerignore` optimised for minimal build context.  
-- Validated parity between local CLI and container execution.  
+### Phase 4: Dockerisation
+- Built and published container image **`nimbus-guard:latest`** (Python 3.12-slim)  
+- Created `.dockerignore` for efficient builds  
+- Ensured feature parity between CLI and container executions  
 
 ---
 
-### Phase 5 - CI/CD & OIDC Integration
-- Configured GitHub Actions workflows:  
-  - CI → `.github/workflows/ci.yml` (push, PR, workflow_call)  
-  - Nightly → `.github/workflows/nightly.yml` (02:00 UTC)  
-- **OIDC Role:** `nimbus‑guard‑scan`  
-  - **ARN:** `arn:aws:iam::155186308102:role/nimbus‑guard‑scan`  
-- GitHub Secret: `NIMBUS_GUARD_ROLE_ARN`  
-- Verified artifact uploads (Markdown + HTML).  
-- Live **CI** and **Nightly** badges added to `README.md`.
+### Phase 5: CI/CD & OIDC Integration
+- Configured GitHub Actions for continuous integration and nightly scans:  
+  - **CI:** `.github/workflows/ci.yml` (push, PR, workflow_call)  
+  - **Nightly:** `.github/workflows/nightly.yml` (02:00 UTC)  
+- **OIDC Role:** `nimbus-guard-scan`  
+  - **ARN:** `arn:aws:iam::<account-number>:role/nimbus-guard-scan`  
+- GitHub secret: `NIMBUS_GUARD_ROLE_ARN`  
+- Verified artifact upload and badge visibility in README  
 
 ---
 
-## 🧪 3. How to Demo Nimbus Guard
+## 🧪 3. Demo Guide
 
 ### 🧩 Local (Python CLI)
 ```bash
 python -m scanner.runner --regions eu-west-2 eu-west-1 --output ./out
 ```
-Then open the generated report:  
+
+Then open the generated report:
 ```bash
 ./out/nimbus-guard-report.html
 ```
@@ -92,29 +94,25 @@ Then open the generated report:
 
 ### 🐳 Docker Run
 ```bash
-docker run --rm \
-  -v "$PWD/out:/app/out" \
-  -e AWS_REGION=eu-west-2 \
-  -e AWS_PROFILE=default \
-  nimbus-guard:latest
+docker run --rm   -v "$PWD/out:/app/out"   -e AWS_REGION=eu-west-2   -e AWS_PROFILE=default   nimbus-guard:latest
 ```
 
 ---
 
 ### ⚙️ GitHub Actions (OIDC)
-- Push a branch or open a PR: CI will auto‑trigger using the OIDC‑assumed role `nimbus‑guard‑scan`.  
-- Check **Artifacts** in the Actions tab for the generated `nimbus‑guard‑report.*` files.  
+- Push a branch or open a PR, CI will automatically assume the OIDC role `nimbus-guard-scan`.  
+- Check the **Actions → Artifacts** tab for the generated reports.  
 
-> If `HIGH` or `CRITICAL` findings exist → non‑zero exit → CI fails → PR blocked.
+> If `HIGH` or `CRITICAL` findings are present → exit code `2` → CI fails → PR blocked.
 
 ---
 
-## 🗂️ 4. Repository Map (High‑Level)
+## 🗂️ 4. Repository Map
 
 ```bash
 /scanner/              # runner.py, report.py, checks/*.py
 /.github/workflows/    # ci.yml, nightly.yml
-/docs/                 # architecture-diagram.png, sample-report.png, DELIVERY_PLAYBOOK.md
+/docs/                 # architecture-diagram.png, sample-report.png, playbook.md
 Dockerfile
 .dockerignore
 requirements.txt
@@ -126,9 +124,9 @@ README.md
 
 ## ⚡ 5. Operational Notes
 
-- **Credentials:** No long‑lived AWS keys. CI authenticates via **GitHub OIDC → AWS role**.  
-- **Regions:** Add or override regions via CLI args. Default: EU‑West pair.  
-- **Extensibility:** Add new checks under `scanner/checks/*.py` and register in the module index.  
+- **Credentials:** No long-lived AWS keys, CI authenticates via **GitHub OIDC → AWS role**  
+- **Regions:** Configurable at runtime; defaults to EU-West pair  
+- **Extensibility:** New checks can be added under `scanner/checks/*.py` and registered in the module index  
 
 ---
 
@@ -136,10 +134,10 @@ README.md
 
 | Focus Area | Description |
 |-------------|-------------|
-| **Service Expansion** | Add RDS snapshot checks, EBS public snapshot detection, KMS rotation validation |
-| **Reporting Enhancements** | Themed HTML outputs, team‑specific severity thresholds |
-| **Notifications** | Slack/Teams integration and AWS SAR packaging |
+| **Service Expansion** | Add RDS snapshot checks, EBS public snapshot detection, and KMS rotation validation |
+| **Reporting Enhancements** | Themed HTML outputs, customizable severity thresholds |
+| **Notifications** | Slack/Teams integrations and AWS SAR packaging |
 
 ---
 
-> **Maintained by:** Asad; Cloud Engineer w/ AWS & Terraform | Specialising in Statistics, Data & Security
+> **Maintained by:** Asad Rana: Cloud Engineer w/ AWS & Terraform | Specialising in Statistics, Data & Security

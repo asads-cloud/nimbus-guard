@@ -1,4 +1,4 @@
-# ☁️ Nimbus Guard — Multi‑Region AWS Security Scanner
+# ☁️ Nimbus Guard: Multi-Region AWS Security Scanner
 
 [![CI](https://github.com/asads-cloud/nimbus-guard/actions/workflows/ci.yml/badge.svg?style=flat-square)](https://github.com/asads-cloud/nimbus-guard/actions/workflows/ci.yml)
 [![Nightly](https://github.com/asads-cloud/nimbus-guard/actions/workflows/nightly.yml/badge.svg?style=flat-square)](https://github.com/asads-cloud/nimbus-guard/actions/workflows/nightly.yml)
@@ -11,28 +11,31 @@
 
 ## 🧭 Overview
 
-**Nimbus Guard** is a **multi‑region AWS security scanner** engineered for **cloud‑native and DevSecOps environments**.  
-It automatically detects **high‑risk misconfigurations** such as:
+**Nimbus Guard** is a **multi-region AWS security scanner** built to demonstrate **modern DevSecOps and cloud security automation** practices.
 
-- Public or unencrypted S3 buckets  
-- Over‑permissive IAM roles and policies  
-- Open security groups and exposed ports  
-- Missing CloudTrail, root MFA, or VPC Flow Logs  
+It performs deep checks for **high-risk misconfigurations** across multiple AWS services and regions, integrating seamlessly into CI/CD pipelines for continuous visibility and automated gating.
 
-Designed for enterprise CI/CD pipelines, Nimbus Guard delivers **actionable HTML and Markdown reports**, integrates seamlessly with **GitHub Actions via OIDC**, and can **fail builds automatically** when `HIGH` or `CRITICAL` findings are detected.
+While lightweight, the architecture has been designed for **extensibility**, providing a strong foundation that can evolve to include:
+
+- Kubernetes and container workload scanning  
+- Deeper AWS service coverage (RDS, Lambda, ECR, CloudFront, etc.)  
+- Integration with AWS Security Hub, GuardDuty, or third-party tooling  
+- Team notifications, analytics dashboards, and historical diffing  
 
 ---
 
-## ⚙️ Key Capabilities
+## ⚙️ Core Capabilities
 
 | Category | Description |
 |-----------|--------------|
-| **Security Detection** | Identifies misconfigurations in core AWS services (S3, IAM, EC2, VPC, CloudTrail, Account) |
-| **Multi‑Region Support** | Parallel scanning across multiple AWS regions for wider coverage |
-| **Compliance‑Ready Reports** | Generates Markdown, HTML and JSON outputs for audit and CI review |
-| **CI/CD Integration** | GitHub Actions (OIDC‑based authentication), Dockerised for environment parity |
-| **Fail‑on‑Severity Logic** | Optional gatekeeping; CI fails automatically on defined thresholds |
-| **Terraform Integration** | Includes OIDC role definition for least‑privilege, secure CI access |
+| **Security Detection** | Identifies misconfigurations across S3, IAM, EC2, VPC, CloudTrail, and Account settings |
+| **Multi-Region Coverage** | Executes scans across multiple AWS regions in parallel |
+| **Reporting** | Generates Markdown, HTML, and JSON outputs for CI pipelines and compliance reviews |
+| **CI/CD Integration** | Designed for GitHub Actions with secure OIDC authentication |
+| **Fail-on-Severity Logic** | Optional gating mechanism to block builds on `HIGH` or `CRITICAL` findings |
+| **Infrastructure as Code** | Terraform templates for minimal, least-privilege IAM/OIDC setup |
+
+> 💡 **Note:** Nimbus Guard is engineered as a compact yet realistic implementation of a cloud-native security automation workflow, suitable for demonstration, learning, and extension.
 
 ---
 
@@ -44,7 +47,7 @@ Designed for enterprise CI/CD pipelines, Nimbus Guard delivers **actionable HTML
 └────────────┬──────────────┘
              │
              ▼
-      AWS IAM Role (Read‑only)
+      AWS IAM Role (Read-only)
              │
              ▼
      Nimbus Guard Scanner (boto3)
@@ -58,7 +61,7 @@ Designed for enterprise CI/CD pipelines, Nimbus Guard delivers **actionable HTML
 
 - **Auth:** Secure OpenID Connect (OIDC) between GitHub and AWS  
 - **Runtime:** Python 3.12 (boto3, Jinja2, Markdown)  
-- **Deployment:** Docker container for consistent builds  
+- **Containerized:** Docker-based for consistent builds  
 - **Provisioning:** Terraform for IAM/OIDC roles and outputs  
 
 ---
@@ -95,94 +98,61 @@ docker run --rm ^
 
 ### 🔁 GitHub Actions (OIDC)
 
-See [`ci.yml`](.github/workflows/ci.yml) for reference.  
+Example workflow under [`ci.yml`](.github/workflows/ci.yml).  
 **Role Name:** `nimbus-guard-scan` provisioned via Terraform.
 
 ---
 
 ## 📊 Reporting
 
-Nimbus Guard outputs two formats:
-
 | Format | Use Case |
 |---------|-----------|
-| **Markdown (.md)** | Lightweight, readable summaries for PRs and documentation |
-| **HTML (.html)** | Visual, color‑coded dashboards for managers or compliance teams |
-|**JSON (.json)** | Structured, machine-readable output for automation & integrations
+| **Markdown (.md)** | Lightweight summaries for pull requests and reviews |
+| **HTML (.html)** | Color-coded dashboards for visual reporting |
+| **JSON (.json)** | Machine-readable for downstream automation |
 
-Reports are generated under `/out`.
-
----
-
-## 🔥 Severity Gating for CI/CD
-
-Exit codes bubble up to CI:  
-- **0** → No findings or only INFO/LOW  
-- **2** → At least one `HIGH` or `CRITICAL` issue (configurable via `NG_FAIL_ON`)  
-
-This enables **secure pipeline automation**; deployments can be automatically blocked when misconfigurations appear.
+All reports are stored under `/out`.
 
 ---
 
-## 🧠 Tech Stack & Design Principles
+## 🔥 CI/CD Severity Gating
 
-- **Languages:** Python 3.12 (boto3, Jinja2, Markdown)  
-- **Infrastructure:** Terraform ≥ 1.13, Docker Desktop  
-- **Security Model:** Least‑privilege OIDC IAM role assumption  
-- **Regions:** `eu‑west‑2` (primary), `eu‑west‑1` (secondary)  
-- **Checks:** S3, IAM, EC2 Security Groups, CloudTrail, VPC Flow Logs, Account MFA  
-- **CI/CD:** GitHub Actions, nightly scanning, badge‑driven visibility  
+Exit codes propagate to CI for automated build decisions:  
 
----
+| Exit Code | Description |
+|------------|--------------|
+| **0** | No findings or only INFO/LOW |
+| **2** | One or more `HIGH` or `CRITICAL` findings |
 
-## 🛡️ Security & Compliance Alignment
-
-Nimbus Guard supports **best practices for cloud governance**, aligning with:  
-
-- **AWS Well‑Architected Framework (Security & Operations pillars)**  
-- **CIS AWS Foundations Benchmark (selected controls)**  
-- **ISO 27001 & NCSC Cloud Security Principles**  
-- **DevSecOps automation workflows**  
+This enables **security-aware automation**, blocking deployments when severe misconfigurations are detected.
 
 ---
 
-## 🧩 Example Use Cases
+## 🧠 Design Principles
 
-- Continuous compliance in multi‑account AWS setups  
-- Pre‑deployment guardrails in IaC pipelines  
-- Security visibility for contractors and consultants  
-- Evidence generation for audits or ISO certification reviews  
-
----
-
-## 🗺️ Potential Expansions
-
-- Expanded AWS service coverage (RDS, ECR, Lambda)  
-- Themed HTML dashboards with historical diffing  
-- Configurable profiles for tailored scans  
-- Slack/Teams alerting integration
-- K8s  
+- **Automation-First:** Built for CI/CD environments  
+- **Cloud-Native Security:** Leverages OIDC federation for least-privilege access  
+- **Lightweight & Modular:** Each component is simple, self-contained, and easily replaceable  
+- **Extensible:** Ready to expand into additional services, integrations, and vulnerability detection layers  
 
 ---
 
-## 💼 Consultant Relevance
+## 🧩 Future Expansion
 
-Nimbus Guard exemplifies **modern DevSecOps engineering practices** — integrating **automation**, **security awareness**, and **IaC governance** into a **portable, production‑grade solution**.
+Nimbus Guard can be extended into a more comprehensive cloud security platform:
 
-It showcases practical expertise in:  
-- **AWS Cloud Security** (IAM, S3, VPC, CloudTrail)  
-- **Terraform OIDC federation**  
-- **Python & Docker DevSecOps tooling**  
-- **CI/CD pipeline integration (GitHub Actions)**  
-
-Ideal for roles involving **Cloud Security Engineering**, **AWS DevOps**, **Platform Security**, and **Infrastructure Automation**.
+- 🔐 **AWS Services:** RDS, Lambda, ECR, CloudFront, KMS  
+- ☸️ **Kubernetes:** EKS posture management and container misconfig scanning  
+- 📈 **Analytics:** Trend tracking and historical result comparisons  
+- 💬 **Integrations:** Slack / Teams notifications or Security Hub exports  
+- 🧩 **IaC:** Terraform plan scanning for pre-deployment checks  
 
 ---
 
-## 📄 License
+## 🧾 License
 
-MIT — see [LICENSE](./LICENSE).
+MIT: see [LICENSE](./LICENSE).
 
 ---
 
-> **Maintained by:** Asad; Cloud Engineer w/ AWS & Terraform | Specialising in Statistics, Data & Security
+> **Maintained by:** Asad Rana: Cloud Engineer w/ AWS & Terraform | Specialising in Statistics, Data & Security

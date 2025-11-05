@@ -4,7 +4,6 @@
 # - Small, reproducible image
 # - Caching for faster rebuilds
 # - Non-root user for safer runtime
-# - Clear layering and comments for auditors & future-you
 
 # If your org uses a golden/base image, swap FROM to that image and keep the rest.
 
@@ -51,7 +50,7 @@ COPY scanner/ /app/
 # declare a default output directory; can be overridden at run time
 ENV NG_OUT=/app/out
 
-# Informational labels (helpful in registries and for auditing SBOMs)
+# Informational labels
 LABEL org.opencontainers.image.title="Nimbus Guard Scanner" \
       org.opencontainers.image.description="AWS configuration scanner producing JSON/Markdown/HTML reports." \
       org.opencontainers.image.source="https://example.invalid/repo" \
