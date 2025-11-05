@@ -1,0 +1,69 @@
+[
+  {
+    "service": "s3",
+    "resource_id": "account:<account-number>",
+    "title": "Account-level PAB incomplete",
+    "severity": "MEDIUM",
+    "region": "eu-west-2",
+    "details": {
+      "flags_false": [
+        "RestrictPublicBuckets"
+      ],
+      "config": {
+        "BlockPublicAcls": true,
+        "IgnorePublicAcls": true,
+        "BlockPublicPolicy": true,
+        "RestrictPublicBuckets": false
+      }
+    }
+  },
+  {
+    "service": "s3",
+    "resource_id": "account:<account-number>",
+    "title": "Account-level PAB incomplete",
+    "severity": "MEDIUM",
+    "region": "eu-west-1",
+    "details": {
+      "flags_false": [
+        "RestrictPublicBuckets"
+      ],
+      "config": {
+        "BlockPublicAcls": true,
+        "IgnorePublicAcls": true,
+        "BlockPublicPolicy": true,
+        "RestrictPublicBuckets": false
+      }
+    }
+  },
+  {
+    "service": "iam",
+    "resource_id": "role:ng-insecure-role",
+    "title": "Full admin permissions via policy 'ng-insecure-full-admin'",
+    "severity": "CRITICAL",
+    "region": null,
+    "details": {
+      "policy": "ng-insecure-full-admin",
+      "reason": "Effect=Allow with Action='*' and Resource='*'"
+    }
+  },
+  {
+    "service": "sg",
+    "resource_id": "sg-0e17e1743e81",
+    "title": "Security Group open to world on ports 80-80",
+    "severity": "HIGH",
+    "region": "eu-west-1",
+    "details": {
+      "group_id": "sg-0e17e1743e81",
+      "group_name": "ng-world-http",
+      "vpc_id": "vpc-04fd865de3d0d8",
+      "ip_protocol": "tcp",
+      "from_port": 80,
+      "to_port": 80,
+      "world_ipv4": true,
+      "world_ipv6": false,
+      "prefix_list_ids": [],
+      "user_id_group_pairs": [],
+      "description": null
+    }
+  }
+]
