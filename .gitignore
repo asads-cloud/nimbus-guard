@@ -15,6 +15,7 @@ terraform.tfstate
 terraform.tfstate.*
 crash.log
 .tfvars
+*.tfvars
 
 # Docker
 *.tar
@@ -29,4 +30,4 @@ Thumbs.db
 # Project folders
 out/
 tools/
-docs/ci/*.tfvars
+docs/ci/
