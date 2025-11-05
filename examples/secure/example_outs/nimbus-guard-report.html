@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nimbus Guard Report</title>
+<style>body { font-family: system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; padding: 24px; }h1, h2, h3, h4 { margin-top: 1.25em; }table { border-collapse: collapse; width: 100%; margin: 12px 0; }th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }th { background: #f5f5f5; }code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }pre { background: #fafafa; border: 1px solid #eee; padding: 12px; overflow: auto; }</style>
+<body>
+<h1 id="nimbus-guard-report">Nimbus Guard Report</h1>
+<p><strong>Run Timestamp (UTC):</strong> 2025-11-05T10:04:38Z<br>
+<strong>Total Findings:</strong> 8<br>
+<strong>Fail Threshold:</strong> HIGH</p>
+<h2 id="findings-by-severity">Findings by Severity</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Severity</th>
+<th style="text-align: right;">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">CRITICAL</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: right;">HIGH</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: right;">MEDIUM</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td style="text-align: right;">LOW</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td style="text-align: right;">INFO</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="findings-by-service">Findings by Service</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Service</th>
+<th style="text-align: right;">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">iam</td>
+<td style="text-align: right;">8</td>
+</tr>
+</tbody>
+</table>
+<h2 id="details">Details</h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Service</th>
+<th>Region</th>
+<th>Resource</th>
+<th>Title</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CRITICAL</td>
+<td>iam</td>
+<td>global</td>
+<td>role:OrganizationAccountAccessRole</td>
+<td>'AdministratorAccess' attached</td>
+</tr>
+<tr>
+<td>CRITICAL</td>
+<td>iam</td>
+<td>global</td>
+<td>role:OrganizationAccountAccessRole</td>
+<td>Full admin permissions via policy 'AdministratorAccess'</td>
+</tr>
+<tr>
+<td>CRITICAL</td>
+<td>iam</td>
+<td>global</td>
+<td>group:dev-admin</td>
+<td>'AdministratorAccess' attached</td>
+</tr>
+<tr>
+<td>CRITICAL</td>
+<td>iam</td>
+<td>global</td>
+<td>group:dev-admin</td>
+<td>Full admin permissions via policy 'AdministratorAccess'</td>
+</tr>
+<tr>
+<td>HIGH</td>
+<td>iam</td>
+<td>global</td>
+<td>role:AWSServiceRoleForTrustedAdvisor</td>
+<td>Over-permissive wildcard in policy 'AWSTrustedAdvisorServiceRolePolicy'</td>
+</tr>
+<tr>
+<td>HIGH</td>
+<td>iam</td>
+<td>global</td>
+<td>role:AWSServiceRoleForSupport</td>
+<td>Over-permissive wildcard in policy 'AWSSupportServiceRolePolicy'</td>
+</tr>
+<tr>
+<td>HIGH</td>
+<td>iam</td>
+<td>global</td>
+<td>role:AWSServiceRoleForResourceExplorer</td>
+<td>Over-permissive wildcard in policy 'AWSResourceExplorerServiceRolePolicy'</td>
+</tr>
+<tr>
+<td>HIGH</td>
+<td>iam</td>
+<td>global</td>
+<td>role:AWSServiceRoleForOrganizations</td>
+<td>Over-permissive wildcard in policy 'AWSOrganizationsServiceTrustPolicy'</td>
+</tr>
+</tbody>
+</table>
+<h3 id="finding-details">Finding Details</h3>
+<h4 id="1-critical-iam-roleorganizationaccountaccessrole">1. CRITICAL — iam — role:OrganizationAccountAccessRole</h4>
+<ul>
+<li><strong>Region:</strong> global</li>
+<li><strong>Title:</strong> 'AdministratorAccess' attached</li>
+<li><strong>Severity:</strong> CRITICAL</li>
+<li><strong>Service:</strong> iam</li>
+<li><strong>Details (YAML-like):</strong></li>
+</ul>
+<p>policy_arn: arn:aws:iam::aws:policy/AdministratorAccess</p>
+<h4 id="2-critical-iam-roleorganizationaccountaccessrole">2. CRITICAL — iam — role:OrganizationAccountAccessRole</h4>
+<ul>
+<li><strong>Region:</strong> global</li>
+<li><strong>Title:</strong> Full admin permissions via policy 'AdministratorAccess'</li>
+<li><strong>Severity:</strong> CRITICAL</li>
+<li><strong>Service:</strong> iam</li>
+<li><strong>Details (YAML-like):</strong></li>
+</ul>
+<p>policy: AdministratorAccess
+reason: Effect=Allow with Action='<em>' and Resource='</em>'</p>
+<h4 id="3-critical-iam-groupdev-admin">3. CRITICAL — iam — group:dev-admin</h4>
+<ul>
+<li><strong>Region:</strong> global</li>
+<li><strong>Title:</strong> 'AdministratorAccess' attached</li>
+<li><strong>Severity:</strong> CRITICAL</li>
+<li><strong>Service:</strong> iam</li>
+<li><strong>Details (YAML-like):</strong></li>
+</ul>
+<p>policy_arn: arn:aws:iam::aws:policy/AdministratorAccess</p>
+<h4 id="4-critical-iam-groupdev-admin">4. CRITICAL — iam — group:dev-admin</h4>
+<ul>
+<li><strong>Region:</strong> global</li>
+<li><strong>Title:</strong> Full admin permissions via policy 'AdministratorAccess'</li>
+<li><strong>Severity:</strong> CRITICAL</li>
+<li><strong>Service:</strong> iam</li>
+<li><strong>Details (YAML-like):</strong></li>
+</ul>
+<p>policy: AdministratorAccess
+reason: Effect=Allow with Action='<em>' and Resource='</em>'</p>
+<h4 id="5-high-iam-roleawsservicerolefortrustedadvisor">5. HIGH — iam — role:AWSServiceRoleForTrustedAdvisor</h4>
+<ul>
+<li><strong>Region:</strong> global</li>
+<li><strong>Title:</strong> Over-permissive wildcard in policy 'AWSTrustedAdvisorServiceRolePolicy'</li>
+<li><strong>Severity:</strong> HIGH</li>
+<li><strong>Service:</strong> iam</li>
+<li><strong>Details (YAML-like):</strong></li>
+</ul>
+<p>policy: AWSTrustedAdvisorServiceRolePolicy
+reason: Wildcard Action and/or Resource='*'</p>
+<h4 id="6-high-iam-roleawsserviceroleforsupport">6. HIGH — iam — role:AWSServiceRoleForSupport</h4>
+<ul>
+<li><strong>Region:</strong> global</li>
+<li><strong>Title:</strong> Over-permissive wildcard in policy 'AWSSupportServiceRolePolicy'</li>
+<li><strong>Severity:</strong> HIGH</li>
+<li><strong>Service:</strong> iam</li>
+<li><strong>Details (YAML-like):</strong></li>
+</ul>
+<p>policy: AWSSupportServiceRolePolicy
+reason: Wildcard Action and/or Resource='*'</p>
+<h4 id="7-high-iam-roleawsserviceroleforresourceexplorer">7. HIGH — iam — role:AWSServiceRoleForResourceExplorer</h4>
+<ul>
+<li><strong>Region:</strong> global</li>
+<li><strong>Title:</strong> Over-permissive wildcard in policy 'AWSResourceExplorerServiceRolePolicy'</li>
+<li><strong>Severity:</strong> HIGH</li>
+<li><strong>Service:</strong> iam</li>
+<li><strong>Details (YAML-like):</strong></li>
+</ul>
+<p>policy: AWSResourceExplorerServiceRolePolicy
+reason: Wildcard Action and/or Resource='*'</p>
+<h4 id="8-high-iam-roleawsservicerolefororganizations">8. HIGH — iam — role:AWSServiceRoleForOrganizations</h4>
+<ul>
+<li><strong>Region:</strong> global</li>
+<li><strong>Title:</strong> Over-permissive wildcard in policy 'AWSOrganizationsServiceTrustPolicy'</li>
+<li><strong>Severity:</strong> HIGH</li>
+<li><strong>Service:</strong> iam</li>
+<li><strong>Details (YAML-like):</strong></li>
+</ul>
+<p>policy: AWSOrganizationsServiceTrustPolicy
+reason: Wildcard Action and/or Resource='*'</p>
+<p><em>Generated by Nimbus Guard. Report is self-contained and link-free.</em></p>
+</body>
+</html>
